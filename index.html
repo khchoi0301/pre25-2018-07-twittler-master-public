@@ -1,27 +1,166 @@
 <!DOCTYPE html> 
 <html>
   <head>
+    <title>
+      Twittler
+    </title>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <style>
+    body {
+      background-color: #1199ff;
+      padding: 0;
+    }
+    header {
+      display: flex;
+      color : white;
+    }
+    write {
+      padding-left: 50px;
+    }
+
+    main {
+      background-color: #EEEEFF;
+      display: flex;
+      padding: 20px;    
+      margin-left : 0;
+      
+    }
+    nav {
+      border-right: 1px solid gray;
+      padding-right: 200px;
+
+    }
+    tw {
+      background-color: white;
+      margin-left: 0px;
+    }
+    tr {
+      display: flex;
+    }
+    div {
+      margin: 5px;
+      padding-left: 100px;
+    }
+
+    td {
+      padding-left: 100px;
+      padding: 10px;
+      border-top: 1px solid gray;
+      width: 1000px
+      
+    }
+
+    aside {
+      border-left: 1px solid gray;
+      padding-left: 500;
+    }
+
+    footer {
+      border-top:  1px solid gray;
+    }
+    
+    #text {
+       width: 600px;
+       height: 80px;
+    }
+
+    #user {
+      margin-left : 22px
+    }
+     
+    </style>
   </head>
   <body>
     <script>
 
       $(document).ready(function(){
+        
         var $body = $('body');
         $body.html('');
+        
+        $body.append($('<header>'));
+        $('header').append($('<home>'));              
+        $('header').append($('<write>'));       
+        $body.append($('<main>'));
+        $('main').append($('<nav>'));
+        $('home').append('<img width=150px height=150px  src= "https://pbs.twimg.com/profile_images/1013798240683266048/zRim1x6M_400x400.jpg">')
+        $('main').append($('<tw>'));
+        $('main').append($('<aside>'));
+        $body.append($('<footer>'))      
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
+        $('write').append($('<h2> I D <input id=user> <button id=btn> 입력 </button><h2> TEXT <input id=text><p>'))
+          
+        $('#btn').on('click',function(){
+          console.log($('#text').val(),$('#user').val());
+          writeTweet($('#text').val(),$('#user').val());
+          showTwittler();
+        })
+          
+        $('div').on('click',function(){
+          console.log(($(this).html()).substr(1))
+          showSelUser(($(this).html()).substr(1));
+        })
+
+        function showTwittler(){
+          $('tr').remove();
+          
+          var index = streams.home.length - 1;
+          while(index >= 0){
+            var tweet = streams.home[index];    
+            var $tweet = $('<td>').appendTo($('<tr>').appendTo($('tw')));
+
+            $('<div id=twuser>').html('@' + tweet.user).appendTo($tweet);
+            $('<div>').text(tweet.message).appendTo($tweet);
+            $('<div>').html(tweet.created_at+'<img width=30px src= "https://i2.wp.com/aquaprosprinklers.com/wp-content/uploads/2018/02/TWITTER.png?w=720&ssl=1">').appendTo($tweet);
+            
+            index -= 1;
+          }
+
+          $('div#twuser').on('click',function(){
+            showSelUser(($(this).html()).substr(1));
+          }) 
         }
+
+
+        function showSelUser (seletUser){
+          $('tr').remove();
+          var index = streams.home.length-1
+          while(index >= 0){
+            var tweet = streams.home[index];
+            if(seletUser==tweet.user){
+              console.log(seletUser,tweet.user,index)
+              var $tweet = $('<td>').appendTo($('<tr>').appendTo($('tw')));
+              $('<div id=twuser>').html('@' + tweet.user).appendTo($tweet);
+              $('<div>').text(tweet.message).appendTo($tweet);
+              $('<div>').html(tweet.created_at+'<img width=30px src= "https://i2.wp.com/aquaprosprinklers.com/wp-content/uploads/2018/02/TWITTER.png?w=720&ssl=1">').appendTo($tweet);
+              index--;  
+            }
+            index--;
+          }
+        }
+
+        $('home').on('click',function(){
+          showTwittler();
+        })
+
+        showTwittler()
+
+        setInterval(showTwittler,20000)
 
       });
 
+   
+        /*    
+        function AddRow(){        
+          var tweet = streams.home[streams.home.length-1];    
+          var $tweet = $('<td>').appendTo($('<tr>').prependTo($('tw')));    
+          $('<div>').html('@' + tweet.user).appendTo($tweet);
+          $('<div>').text(tweet.message).appendTo($tweet);
+          $('<div>').html(tweet.created_at+'<img width=30px src= "https://i2.wp.com/aquaprosprinklers.com/wp-content/uploads/2018/02/TWITTER.png?w=720&ssl=1">').appendTo($tweet);
+            
+        }*/  
+        
     </script>
   </body>
 </html>
